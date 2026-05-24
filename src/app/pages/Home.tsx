@@ -43,7 +43,7 @@ export function Home() {
 
             <h2 className="text-6xl font-bold text-white mb-6 leading-tight">
               Domina el Arte de la{" "}
-              <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
+              <img src="/logo-seo.png" alt="SEO" className="h-10 w-auto" />
                 Comunicación
               </span>
             </h2>
@@ -122,7 +122,7 @@ export function Home() {
       </main>
 
       <footer className="relative p-6 text-center text-gray-500 text-sm z-10">
-        <p>© 2026 VoxMentor - Domina tu comunicación con IA</p>
+        <p>© 2026 SEO — Sistema de Entrenamiento de Oratoria</p>
       </footer>
     </div>
   );

@@ -146,7 +146,7 @@ export function Dashboard() {
       <nav className="relative border-b border-gray-800 bg-gray-900/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link to="/" className="text-2xl font-bold">
-            <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+            <img src="/logo-seo.png" alt="SEO" className="h-8 w-auto" />
               VoxMentor
             </span>
           </Link>

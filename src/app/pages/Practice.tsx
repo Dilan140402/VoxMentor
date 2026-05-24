@@ -700,7 +700,7 @@ export function Practice() {
         <div className="max-w-[1800px] mx-auto flex items-center justify-between">
           <div>
             <h1 className="font-bold text-xl">
-              <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+              <img src="/logo-seo.png" alt="SEO" className="h-8 w-auto" />
                 VoxMentor
               </span>
             </h1>

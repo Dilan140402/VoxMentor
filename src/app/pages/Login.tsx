@@ -12,10 +12,7 @@ export function Login() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900
                     flex items-center justify-center text-white">
       <div className="text-center space-y-6 p-8 bg-gray-800/50 rounded-2xl border border-gray-700">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400
-                       bg-clip-text text-transparent">
-          VoxMentor
-        </h1>
+        <img src="/logo-seo.png" alt="SEO" className="h-16 w-auto mx-auto" />
         <p className="text-gray-400">Inicia sesión para guardar tu progreso</p>
         <button
           onClick={handleGoogleLogin}
