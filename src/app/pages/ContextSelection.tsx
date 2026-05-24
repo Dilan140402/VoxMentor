@@ -54,9 +54,7 @@ export function ContextSelection() {
 
       <header className="relative p-6 flex items-center justify-between border-b border-gray-800">
         <Link to="/" className="text-2xl font-bold">
-          <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-            VoxMentor
-          </span>
+          <img src="/logo-seo.png" alt="SEO" className="h-8 w-auto" />
         </Link>
         <Link
           to="/dashboard"
