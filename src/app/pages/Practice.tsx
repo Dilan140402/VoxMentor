@@ -21,9 +21,7 @@ import {
 import { FileUpload } from "../components/FileUpload";
 import { supabase } from "../../lib/supabase";
 import { generateAIReport } from "../../lib/generateReport";
-import { useFaceDetection } from "../../hooks/useFaceDetection";
-import { useHandDetection } from "../../hooks/useHandDetection";
-import { usePoseDetection } from "../../hooks/usePoseDetection";
+import { useBodyDetection } from "../../hooks/useBodyDetection";
 
 // FIX 2: Declarar tipos globales de SpeechRecognition para TypeScript
 declare global {
@@ -119,63 +117,45 @@ export function Practice() {
     });
   }, []);
 
-  // FIX 4: useFaceDetection movido aquí, al nivel correcto del componente (Rules of Hooks)
-    useFaceDetection(
-      videoRef,
-      canvasRef,
-      showFaceMesh,
-      (metrics) => {
-        setStats((prev) => ({
-          ...prev,
-          eyeContact: metrics.eyeContact,
-        }));
 
-        if (metrics.lookingAway && isRecording) {
-          setFeedback((prev) => [
-            {
-              id: Date.now().toString(),
-              type: "warning",
-              message:
-                "Mantén el contacto visual con la cámara.",
-              timestamp: Date.now(),
-            },
-            ...prev.slice(0, 4),
-          ]);
-        }
-      }
-  );
+  // ── DETECCIÓN UNIFICADA (cara + manos + postura en un solo WASM) ──
+  useBodyDetection(videoRef, isRecording, (metrics) => {
+    setStats((prev) => ({
+      ...prev,
+      eyeContact: metrics.eyeContact,
+      handGestures: metrics.gestureScore,
+      posture: metrics.postureScore,
+    }));
 
-  // ── DETECCIÓN DE MANOS REAL (MediaPipe HandLandmarker) ────────
-  useHandDetection(videoRef, (metrics) => {
-    setStats((prev) => ({ ...prev, handGestures: metrics.gestureScore }));
+    if (!isRecording) return;
 
-    if (isRecording && metrics.handsDetected === 0) {
+    if (metrics.lookingAway) {
       addUniqueFeedback({
-        id: Date.now().toString(),
+        id: "eye-" + Date.now(),
+        type: "warning",
+        message: "Mantén el contacto visual con la cámara.",
+        timestamp: Date.now(),
+      });
+    }
+    if (metrics.handsDetected === 0) {
+      addUniqueFeedback({
+        id: "hand-" + Date.now(),
         type: "warning",
         message: "No se detectan tus manos. Muéstralas para analizar gestos.",
         timestamp: Date.now(),
       });
     }
-  });
-  // ─────────────────────────────────────────────────────────────
-
-  // ── DETECCIÓN DE POSTURA REAL (MediaPipe PoseLandmarker) ──────
-  usePoseDetection(videoRef, (metrics) => {
-    setStats((prev) => ({ ...prev, posture: metrics.postureScore }));
-
-    if (isRecording && metrics.isLeaning) {
+    if (metrics.isLeaning) {
       addUniqueFeedback({
-        id: Date.now().toString(),
+        id: "lean-" + Date.now(),
         type: "warning",
-        message: "Detectamos que estás inclinado. Mantén la espalda recta.",
+        message: "Estás inclinado. Mantén la espalda recta.",
         timestamp: Date.now(),
       });
     }
-
-    if (isRecording && !metrics.shouldersLevel) {
+    if (!metrics.shouldersLevel) {
       addUniqueFeedback({
-        id: Date.now().toString(),
+        id: "shoulder-" + Date.now(),
         type: "warning",
         message: "Nivela tus hombros. Estás encorvado hacia un lado.",
         timestamp: Date.now(),
@@ -183,6 +163,7 @@ export function Practice() {
     }
   });
   // ─────────────────────────────────────────────────────────────
+
 
   // ── CÁMARA REAL ──────────────────────────────────────────────
     const startCamera = useCallback(async () => {
@@ -367,7 +348,7 @@ export function Practice() {
     }
 
     const recognition = new SpeechRecognitionAPI();
-    recognition.lang = "es-ES"; // es-PE no está soportado por Web Speech API
+    recognition.lang = "es-PE";
     recognition.continuous = true;
     recognition.interimResults = true;  // muestra texto mientras hablas
     recognition.maxAlternatives = 1;
@@ -653,22 +634,20 @@ export function Practice() {
 
     const currentStats = { ...stats, fillerWords: fillerWordsRef.current };
     const transcript = transcriptRef.current.trim().replace(/\s+/g, " ");
-    const savedDuration = timeElapsed;       // ← guardar ANTES de resetPractice
-    const savedContextType = contextType;    // ← guardar ANTES de resetPractice
 
     try {
       // 1. Guardar en Supabase (no bloquea el flujo si falla)
       await saveSession({
-        contextType: savedContextType || "general",
-        duration: savedDuration,
+        contextType: contextType || "general",
+        duration: timeElapsed,
         stats: currentStats,
         transcript,
       }).catch((err) => console.warn("saveSession falló (sin login?):", err));
 
       // 2. Generar reporte con Gemini
       const report = await generateAIReport({
-        contextType: savedContextType || "general",
-        duration: savedDuration,
+        contextType: contextType || "general",
+        duration: timeElapsed,
         fillerWords: currentStats.fillerWords,
         eyeContact: currentStats.eyeContact,
         posture: currentStats.posture,
@@ -683,8 +662,8 @@ export function Practice() {
         state: {
           stats: currentStats,
           report,
-          duration: savedDuration,
-          contextType: contextTitles[savedContextType || ""] || "Práctica General",
+          duration: timeElapsed,
+          contextType: contextTitles[contextType || ""] || "Práctica General",
         },
       });
 
@@ -697,8 +676,8 @@ export function Practice() {
           stats: currentStats,
           report:
             "No se pudo generar el reporte automático. Revisa tu conexión a internet o la API key de Gemini en el archivo .env",
-          duration: savedDuration,
-          contextType: contextTitles[savedContextType || ""] || "Práctica General",
+          duration: timeElapsed,
+          contextType: contextTitles[contextType || ""] || "Práctica General",
         },
       });
     } finally {
