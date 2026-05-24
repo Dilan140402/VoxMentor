@@ -1,0 +1,83 @@
+Contexto General
+Quiero que construyas una plataforma web interactiva llamada "VoxMentor" (o el nombre que prefieras). Su propósito es ayudar a estudiantes universitarios, tesistas, vendedores, profesionales y cualquier persona a mejorar sus habilidades de comunicación oral y corporal mediante práctica guiada, retroalimentación en tiempo real y reportes personalizados basados en IA.
+
+Casos de Uso Detallados
+CU-01 — Onboarding y perfil de mejora
+El usuario ingresa a la plataforma y completa un flujo de configuración inicial:
+
+Selecciona su rol: estudiante universitario, tesista, vendedor, docente, orador público, etc.
+Define su objetivo concreto: defender una tesis, presentar un proyecto al equipo, dar un pitch de ventas, exponer en clase, hablar en público, entrevista laboral, etc.
+Indica su nivel de experiencia: principiante, intermedio, avanzado.
+La plataforma genera un plan de práctica personalizado basado en esas respuestas, con sesiones progresivas y métricas específicas a trabajar según el contexto elegido.
+
+CU-02 — Entorno de práctica personalizado
+Antes de iniciar la sesión, la plataforma prepara el escenario:
+
+Si el usuario eligió "defensa de tesis": el entorno simula un jurado con preguntas típicas de defensa y el sistema evalúa fluidez técnica, claridad argumental y manejo del nerviosismo.
+Si eligió "pitch de ventas": simula una reunión con cliente escéptico, evalúa persuasión, tono de confianza y lenguaje corporal.
+Si eligió "exposición en clase": simula un aula virtual, evalúa estructura lógica del discurso, contacto visual y ritmo.
+Cada entorno tiene parámetros distintos de evaluación y umbrales de desempeño adaptados al contexto.
+
+CU-03 — Sesión de práctica con detección en tiempo real
+El usuario activa su cámara y micrófono. Durante la sesión activa, la plataforma detecta y analiza en tiempo real:
+Audio:
+
+Muletillas frecuentes: "eh", "o sea", "este", "básicamente", "literalmente" → alerta visual discreta cuando se repiten más de X veces por minuto.
+Tono de voz: monótono vs. variado, volumen insuficiente, velocidad (palabras por minuto), pausas estratégicas vs. silencios incómodos.
+Claridad de dicción y pronunciación.
+Uso de lenguaje técnico apropiado al contexto.
+
+Video / Lenguaje corporal:
+
+Posición de las manos: cruzadas (negativo), gestos abiertos (positivo), manos ocultas (negativo).
+Contacto visual: porcentaje de tiempo mirando a cámara vs. desviando la mirada.
+Postura corporal: encorvado vs. erguido, movimiento excesivo o rigidez.
+Expresiones faciales: tensión, confianza, sonrisa.
+Movimiento de cabeza: asentir, gestos de énfasis.
+
+Retroalimentación en tiempo real (no invasiva):
+
+Indicadores sutiles en pantalla: íconos, colores (verde/amarillo/rojo) que aparecen sin interrumpir la práctica.
+Mensajes breves superpuestos: "Reduce el ritmo", "Mira a cámara", "Muletilla detectada: 'o sea'".
+La retroalimentación debe ser motivadora, no abrumadora.
+
+CU-04 — Fin de sesión y reporte detallado
+Al terminar la práctica, se genera un informe completo que incluye:
+
+Resumen ejecutivo: puntaje global de desempeño (ej. 74/100), comparado con sesión anterior.
+Desglose por categoría: voz (tono, velocidad, volumen), lenguaje corporal, muletillas, contacto visual, estructura del discurso.
+Gráficas de evolución a lo largo del tiempo.
+Top 3 fortalezas identificadas en la sesión.
+Top 3 áreas de mejora con recomendaciones concretas y ejercicios sugeridos.
+Fragmentos del video marcados con timestamps donde ocurrieron los errores más frecuentes (ej. "Minuto 2:14 — uso repetido de 'básicamente'").
+Siguiente sesión recomendada: qué trabajar y cómo.
+
+CU-05 — Progreso y gamificación
+
+El usuario puede ver su evolución en un dashboard: gráficas de mejora por semana/mes.
+Sistema de logros: "Primera sesión completada", "0 muletillas en 5 minutos", "Postura perfecta sostenida", etc.
+Racha de práctica diaria.
+Comparativa opcional con usuarios del mismo perfil (modo anónimo).
+
+CU-06 — Biblioteca de recursos contextuales
+
+Según el perfil del usuario, se le sugieren micro-lecciones: videos de 2-3 minutos sobre técnicas de respiración, manejo de nervios, estructura del discurso, técnica del storytelling para ventas, etc.
+Ejercicios de calentamiento vocal antes de cada sesión.
+Ejemplos de oradores de referencia según el contexto (TED Talks, defensas académicas, pitches).
+
+
+Stack tecnológico sugerido (para la implementación)
+
+Frontend: React + Tailwind CSS, interfaz moderna, oscura y profesional.
+Cámara/micrófono: Web Speech API + MediaDevices API del navegador.
+Análisis de audio: Web Audio API para volumen y ritmo; modelo de speech-to-text para detectar muletillas.
+Análisis de video: MediaPipe (Face Mesh + Pose Landmarks) para postura, contacto visual y manos.
+Backend/IA: API de Claude (Anthropic) para generar los reportes narrativos, recomendaciones personalizadas y planes de práctica.
+Base de datos: historial de sesiones, métricas y progreso del usuario.
+
+
+Diseño visual esperado
+Estética profesional y motivadora. Fondo oscuro con acentos en azul eléctrico o verde neón. Tipografía clara y moderna. El entorno de práctica debe sentirse como un "escenario virtual" que motive al usuario a tomárselo en serio. Los indicadores en tiempo real deben ser no invasivos pero visibles.
+
+Entregable esperado
+Construye la plataforma completa con: flujo de onboarding, selector de contexto, entorno de práctica con cámara/micrófono activos, indicadores en tiempo real (aunque sean simulados para el prototipo), y reporte final generado con la API de Claude. Incluye navegación entre secciones, dashboard de progreso y biblioteca de recursos.
