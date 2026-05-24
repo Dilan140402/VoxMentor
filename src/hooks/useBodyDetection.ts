@@ -33,7 +33,9 @@ const DEFAULT_METRICS: BodyMetrics = {
 
 export function useBodyDetection(
   videoRef: React.RefObject<HTMLVideoElement>,
+  canvasRef: React.RefObject<HTMLCanvasElement>,
   enabled: boolean,
+  showMesh: boolean,
   onMetrics: (metrics: BodyMetrics) => void
 ) {
   const faceRef = useRef<FaceLandmarker | null>(null);
@@ -110,6 +112,38 @@ export function useBodyDetection(
     // ── Cara ──────────────────────────────────────────────────
     try {
       const faceResults = faceRef.current.detectForVideo(video, now);
+
+      // ── DIBUJAR EN CANVAS si showMesh está activo ──────────
+      const canvas = canvasRef.current;
+      if (canvas) {
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          // Ajustar tamaño del canvas al video
+          if (canvas.width !== video.videoWidth) {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+          }
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          if (showMesh && faceResults.faceLandmarks.length > 0) {
+            const lm = faceResults.faceLandmarks[0];
+            ctx.fillStyle = "#00FFFF";
+            lm.forEach((point) => {
+              ctx.beginPath();
+              ctx.arc(
+                point.x * canvas.width,
+                point.y * canvas.height,
+                1.5,
+                0,
+                2 * Math.PI
+              );
+              ctx.fill();
+            });
+          }
+        }
+      }
+      // ───────────────────────────────────────────────────────
+
       if (faceResults.faceLandmarks.length > 0) {
         const lm = faceResults.faceLandmarks[0];
         const nose = lm[1];
@@ -134,6 +168,7 @@ export function useBodyDetection(
         metrics.headTilt = Math.round(horizontalOffset * 100);
       }
     } catch (_) {}
+
 
     // ── Manos ─────────────────────────────────────────────────
     try {
@@ -195,7 +230,7 @@ export function useBodyDetection(
 
     onMetrics(metrics);
     animFrameRef.current = requestAnimationFrame(detect);
-  }, [videoRef, onMetrics]);
+  }, [videoRef, canvasRef, showMesh, onMetrics]);
 
   useEffect(() => {
     if (!enabled) return;

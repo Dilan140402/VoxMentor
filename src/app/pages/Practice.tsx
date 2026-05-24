@@ -119,7 +119,7 @@ export function Practice() {
 
 
   // ── DETECCIÓN UNIFICADA (cara + manos + postura en un solo WASM) ──
-  useBodyDetection(videoRef, isRecording, (metrics) => {
+  useBodyDetection(videoRef, canvasRef, isRecording, showFaceMesh, (metrics) => {
     setStats((prev) => ({
       ...prev,
       eyeContact: metrics.eyeContact,
@@ -348,7 +348,7 @@ export function Practice() {
     }
 
     const recognition = new SpeechRecognitionAPI();
-    recognition.lang = "es-PE";
+    recognition.lang = "es-ES";
     recognition.continuous = true;
     recognition.interimResults = true;  // muestra texto mientras hablas
     recognition.maxAlternatives = 1;
@@ -607,12 +607,18 @@ export function Practice() {
     if (error) console.error("Error guardando sesión:", error);
   };
 
-  const handleStart = async() => {
-    await resetPractice(); // Reiniciar todo antes de empezar
-    
+  const handleStart = async () => {
+    await resetPractice();
+
+    // ← CRÍTICO: sincronizar el ref ANTES de arrancar recognition
+    // (React aún no aplicó setIsRecording(true), pero onend necesita saber
+    //  que estamos grabando para poder reiniciar automáticamente)
+    isRecordingRef.current = true;
+
     setIsRecording(true);
     startSpeechRecognition();
-    await startMicrophoneDetection(); // FIX 7: ahora sí se llama
+    await startMicrophoneDetection();
+
     addFeedback({
       id: Date.now().toString(),
       type: "success",
@@ -620,6 +626,7 @@ export function Practice() {
       timestamp: Date.now(),
     });
   };
+
 
   const handleStop = async () => {
     setIsRecording(false);
