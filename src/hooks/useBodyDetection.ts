@@ -176,6 +176,69 @@ export function useBodyDetection(
         const handResults = handRef.current.detectForVideo(video, now);
         metrics.handsDetected = handResults.landmarks.length;
 
+        // ── DIBUJAR ESQUELETO DE MANOS en el canvas ────────────
+        const canvas = canvasRef.current;
+        if (canvas && showMesh) {
+          const ctx = canvas.getContext("2d");
+          if (ctx) {
+            // Conexiones entre landmarks (falanges y palma)
+            // Índices según MediaPipe Hand Landmarker (21 puntos por mano)
+            const HAND_CONNECTIONS: [number, number][] = [
+              // Palma
+              [0, 1], [0, 5], [0, 17], [5, 9], [9, 13], [13, 17],
+              // Pulgar
+              [1, 2], [2, 3], [3, 4],
+              // Índice
+              [5, 6], [6, 7], [7, 8],
+              // Medio
+              [9, 10], [10, 11], [11, 12],
+              // Anular
+              [13, 14], [14, 15], [15, 16],
+              // Meñique
+              [17, 18], [18, 19], [19, 20],
+            ];
+
+            handResults.landmarks.forEach((handLandmarks, handIndex) => {
+              // Color diferente para cada mano
+              const lineColor = handIndex === 0 ? "#00FF88" : "#FF6B35";
+              const dotColor  = handIndex === 0 ? "#FFFFFF" : "#FFE566";
+
+              // ── Dibujar líneas (falanges) ──────────────────
+              ctx.strokeStyle = lineColor;
+              ctx.lineWidth = 2;
+              HAND_CONNECTIONS.forEach(([a, b]) => {
+                const ptA = handLandmarks[a];
+                const ptB = handLandmarks[b];
+                ctx.beginPath();
+                ctx.moveTo(ptA.x * canvas.width, ptA.y * canvas.height);
+                ctx.lineTo(ptB.x * canvas.width, ptB.y * canvas.height);
+                ctx.stroke();
+              });
+
+              // ── Dibujar puntos (articulaciones) ───────────
+              handLandmarks.forEach((point, idx) => {
+                const x = point.x * canvas.width;
+                const y = point.y * canvas.height;
+
+                // Puntas de los dedos (4, 8, 12, 16, 20) más grandes
+                const isFingertip = [4, 8, 12, 16, 20].includes(idx);
+                const radius = isFingertip ? 5 : 3;
+
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, 2 * Math.PI);
+                ctx.fillStyle = dotColor;
+                ctx.fill();
+
+                // Borde negro para destacar
+                ctx.strokeStyle = "#000000";
+                ctx.lineWidth = 1;
+                ctx.stroke();
+              });
+            });
+          }
+        }
+        // ──────────────────────────────────────────────────────
+
         if (handResults.landmarks.length > 0) {
           const wrist = handResults.landmarks[0][0];
           const cur = { x: wrist.x, y: wrist.y };
