@@ -701,8 +701,6 @@ export function Practice() {
           <div>
             <h1 className="font-bold text-xl">
               <img src="/logo-seo.png" alt="SEO" className="h-8 w-auto" />
-                VoxMentor
-              </span>
             </h1>
             <p className="text-sm text-gray-400">
               {contextTitles[contextType || ""] || "Práctica"}
