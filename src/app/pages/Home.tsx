@@ -20,9 +20,7 @@ export function Home() {
 
       <header className="relative p-6 z-10">
         <h1 className="text-2xl font-bold">
-          <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-            VoxMentor
-          </span>
+          <img src="/logo-seo.png" alt="SEO" className="h-10 w-auto" />
         </h1>
       </header>
 
@@ -43,7 +41,7 @@ export function Home() {
 
             <h2 className="text-6xl font-bold text-white mb-6 leading-tight">
               Domina el Arte de la{" "}
-              <img src="/logo-seo.png" alt="SEO" className="h-10 w-auto" />
+              <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">
                 Comunicación
               </span>
             </h2>
