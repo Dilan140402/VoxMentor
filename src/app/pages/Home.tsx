@@ -9,8 +9,26 @@ export function Home() {
   const navigate = useNavigate();
 
   const handleStart = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    navigate(user ? "/onboarding" : "/login");
+    try {
+      // getSession() lee la sesión local (rápido, sin colgarse en la red).
+      // Aun así lo limitamos con un timeout por si acaso, para que el botón
+      // SIEMPRE navegue y nunca quede "muerto".
+      const timeout = new Promise<null>((resolve) =>
+        setTimeout(() => resolve(null), 2500)
+      );
+      const result = await Promise.race([
+        supabase.auth.getSession(),
+        timeout,
+      ]);
+
+      const user = result?.data?.session?.user ?? null;
+      navigate(user ? "/onboarding" : "/login");
+    } catch (error) {
+      // Si Supabase falla (claves inválidas, sin conexión, etc.) no dejamos
+      // el botón "muerto": llevamos al login de todas formas.
+      console.error("No se pudo verificar la sesión:", error);
+      navigate("/login");
+    }
   };
   // ─────────────────────────────────────────────────────────────
   return (
