@@ -6,11 +6,24 @@ import {
   FilesetResolver,
 } from "@mediapipe/tasks-vision";
 
+export type ExpressionType =
+  | "eye-contact"
+  | "smile"
+  | "frown"
+  | "neutral"
+  | "looking-away"
+  | "exaggerated";
+
+export type ExpressionIntensity = "low" | "medium" | "high";
+
 export interface BodyMetrics {
   // Cara
   eyeContact: number;
   lookingAway: boolean;
   headTilt: number;
+  // Expresión facial (derivada de blendshapes reales de MediaPipe)
+  expression: ExpressionType;
+  expressionIntensity: ExpressionIntensity;
   // Manos
   handsDetected: number;
   gestureScore: number;
@@ -24,6 +37,8 @@ const DEFAULT_METRICS: BodyMetrics = {
   eyeContact: 80,
   lookingAway: false,
   headTilt: 0,
+  expression: "neutral",
+  expressionIntensity: "low",
   handsDetected: 0,
   gestureScore: 50,
   postureScore: 85,
@@ -66,6 +81,7 @@ export function useBodyDetection(
           },
           runningMode: "VIDEO",
           numFaces: 1,
+          outputFaceBlendshapes: true, // necesario para detectar sonrisa, ceño, etc.
         }),
         HandLandmarker.createFromOptions(vision, {
           baseOptions: {
@@ -166,6 +182,45 @@ export function useBodyDetection(
         metrics.eyeContact = Math.round(Math.min(100, Math.max(0, eyeContactScore)));
         metrics.lookingAway = lookingAway;
         metrics.headTilt = Math.round(horizontalOffset * 100);
+
+        // ── Expresión facial REAL desde blendshapes ──────────────
+        // MediaPipe devuelve ~52 categorías (0-1) con nombres como
+        // "mouthSmileLeft", "browDownLeft", "jawOpen", etc.
+        const categories = faceResults.faceBlendshapes?.[0]?.categories ?? [];
+        const bs = (name: string) =>
+          categories.find(
+            (c: { categoryName?: string; score: number }) =>
+              c.categoryName === name
+          )?.score ?? 0;
+
+        const smile = (bs("mouthSmileLeft") + bs("mouthSmileRight")) / 2;
+        const frown = (bs("browDownLeft") + bs("browDownRight")) / 2;
+        const jawOpen = bs("jawOpen");
+
+        // El valor dominante define la expresión mostrada
+        let expression: BodyMetrics["expression"] = "neutral";
+        let dominantScore = 0;
+
+        if (lookingAway) {
+          expression = "looking-away";
+          dominantScore = 0.7;
+        } else if (jawOpen > 0.55) {
+          expression = "exaggerated"; // boca muy abierta / gesto exagerado
+          dominantScore = jawOpen;
+        } else if (smile > 0.35 && smile >= frown) {
+          expression = "smile";
+          dominantScore = smile;
+        } else if (frown > 0.35) {
+          expression = "frown";
+          dominantScore = frown;
+        } else {
+          expression = "eye-contact"; // mira a cámara, rostro relajado
+          dominantScore = metrics.eyeContact / 100;
+        }
+
+        metrics.expression = expression;
+        metrics.expressionIntensity =
+          dominantScore > 0.66 ? "high" : dominantScore > 0.4 ? "medium" : "low";
       }
     } catch (_) {}
 

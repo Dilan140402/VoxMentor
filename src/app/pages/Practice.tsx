@@ -21,7 +21,7 @@ import {
 import { FileUpload } from "../components/FileUpload";
 import { supabase } from "../../lib/supabase";
 import { generateAIReport } from "../../lib/generateReport";
-import { useBodyDetection } from "../../hooks/useBodyDetection";
+import { useBodyDetection, type BodyMetrics } from "../../hooks/useBodyDetection";
 
 // FIX 2: Declarar tipos globales de SpeechRecognition para TypeScript
 declare global {
@@ -102,6 +102,8 @@ export function Practice() {
   const animationRef = useRef<number | null>(null);
   // Ref para evitar stale closure en recognition.onend
   const isRecordingRef = useRef(false);
+  // Throttle para no inundar el panel de expresiones (1 cada 1.5s)
+  const lastExprPushRef = useRef(0);
 
   // Sincronizar isRecordingRef con el estado reactivo
   useEffect(() => {
@@ -119,7 +121,9 @@ export function Practice() {
 
 
   // ── DETECCIÓN UNIFICADA (cara + manos + postura en un solo WASM) ──
-  useBodyDetection(videoRef, canvasRef, isRecording, showFaceMesh, (metrics) => {
+  // Callback ESTABLE (useCallback) para no recrear el loop de detección
+  // en cada render. Usa isRecordingRef en vez de isRecording por la misma razón.
+  const handleBodyMetrics = useCallback((metrics: BodyMetrics) => {
     setStats((prev) => ({
       ...prev,
       eyeContact: metrics.eyeContact,
@@ -127,7 +131,21 @@ export function Practice() {
       posture: metrics.postureScore,
     }));
 
-    if (!isRecording) return;
+    if (!isRecordingRef.current) return;
+
+    // ── Expresión facial REAL (throttle: máx 1 cada 1.5s) ──────
+    const now = Date.now();
+    if (now - lastExprPushRef.current > 1500) {
+      lastExprPushRef.current = now;
+      setFacialExpressions((prev) => [
+        ...prev.slice(-5),
+        {
+          type: metrics.expression,
+          intensity: metrics.expressionIntensity,
+          timestamp: now,
+        },
+      ]);
+    }
 
     if (metrics.lookingAway) {
       addUniqueFeedback({
@@ -161,7 +179,9 @@ export function Practice() {
         timestamp: Date.now(),
       });
     }
-  });
+  }, [addUniqueFeedback]);
+
+  useBodyDetection(videoRef, canvasRef, isRecording, showFaceMesh, handleBodyMetrics);
   // ─────────────────────────────────────────────────────────────
 
 
@@ -260,7 +280,8 @@ export function Practice() {
       timerRef.current = setInterval(() => {
         setTimeElapsed((prev) => prev + 1);
       }, 1000);
-      startDetection();
+      // Las métricas reales llegan por useBodyDetection (cara/manos/postura)
+      // y por la detección de voz/micrófono — ya no se simula nada.
     } else {
       if (timerRef.current) clearInterval(timerRef.current);
       if (detectionRef.current) clearInterval(detectionRef.current);
@@ -271,63 +292,6 @@ export function Practice() {
       if (detectionRef.current) clearInterval(detectionRef.current);
     };
   }, [isRecording]);
-
-  const startDetection = () => {
-    if (detectionRef.current) {
-      clearInterval(detectionRef.current);
-    }
-    detectionRef.current = setInterval(() => {
-      const random = Math.random();
-
-      // Detección de expresiones faciales
-      const expressionRandom = Math.random();
-      if (expressionRandom < 0.2) {
-        const expressions: FacialExpression["type"][] = [
-          "eye-contact",
-          "smile",
-          "frown",
-          "neutral",
-          "looking-away",
-          "exaggerated",
-        ];
-        const intensities: FacialExpression["intensity"][] = ["low", "medium", "high"];
-
-        const newExpression: FacialExpression = {
-          type: expressions[Math.floor(Math.random() * expressions.length)],
-          intensity: intensities[Math.floor(Math.random() * intensities.length)],
-          timestamp: Date.now(),
-        };
-
-        setFacialExpressions((prev) => [...prev.slice(-4), newExpression]);
-      }
-
-      if (random < 0.25) {
-        addFeedback({
-          id: Date.now().toString(),
-          type: "warning",
-          message: "Contacto visual bajo. Mira más a la cámara.",
-          timestamp: Date.now(),
-        });
-        setStats((prev) => ({ ...prev, eyeContact: Math.max(0, prev.eyeContact - 5) }));
-      } else if (random < 0.45) {
-        addFeedback({
-          id: Date.now().toString(),
-          type: "warning",
-          message: "Postura encorvada. Mantén la espalda recta.",
-          timestamp: Date.now(),
-        });
-        setStats((prev) => ({ ...prev, posture: Math.max(0, prev.posture - 5) }));
-      } else if (random < 0.65) {
-        addFeedback({
-          id: Date.now().toString(),
-          type: "success",
-          message: "Excelente contacto visual mantenido.",
-          timestamp: Date.now(),
-        });
-        setStats((prev) => ({ ...prev, eyeContact: Math.min(100, prev.eyeContact + 3) }));
-      }
-    }, 3000);
-  };
 
   const addFeedback = (newFeedback: Feedback) => {
     setFeedback((prev) => [newFeedback, ...prev].slice(0, 5));
@@ -661,6 +625,7 @@ export function Practice() {
         voiceTone: currentStats.voiceTone,
         gestures: currentStats.handGestures,
         transcript,
+        scriptText: practiceText,
       });
 
       await resetPractice();
