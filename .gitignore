@@ -1,0 +1,46 @@
+# Dependencias
+node_modules/
+.pnpm-store/
+
+# Build / salida de Vite
+dist/
+dist-ssr/
+build/
+
+# Variables de entorno (¡NUNCA subir claves!)
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Cache de herramientas
+.vite/
+.cache/
+.temp/
+*.tsbuildinfo
+
+# Vercel
+.vercel/
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Comprimidos / respaldos que no deben versionarse
+*.rar
+*.zip
+*.7z
