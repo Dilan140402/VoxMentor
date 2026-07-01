@@ -10,6 +10,7 @@ import {
   ArrowRight,
   ArrowLeft,
 } from "lucide-react";
+import { ThemeToggle } from "../components/ThemeToggle";
 
 interface OnboardingData {
   role: string;
@@ -105,16 +106,20 @@ export function Onboarding() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]" />
+
+      <div className="absolute top-6 right-6 z-20">
+        <ThemeToggle />
+      </div>
 
       <div className="relative min-h-screen flex flex-col items-center justify-center px-4 py-12">
         <div className="w-full max-w-3xl">
           <div className="text-center mb-12">
             <h1 className="text-5xl font-bold mb-2">
-              <img src="/logo-seo.png" alt="SEO" className="h-8 w-auto" />
+              <img src="/logo-seo.png" alt="SEO" className="h-8 w-auto invert dark:invert-0" />
             </h1>
-            <p className="text-gray-400">Configura tu perfil de práctica</p>
+            <p className="text-gray-600 dark:text-gray-400">Configura tu perfil de práctica</p>
           </div>
 
           <div className="flex items-center justify-center mb-12">
@@ -124,7 +129,7 @@ export function Onboarding() {
                   className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all ${
                     step >= num
                       ? "bg-gradient-to-r from-blue-500 to-cyan-500 text-white"
-                      : "bg-gray-800 text-gray-500"
+                      : "bg-gray-200 dark:bg-gray-800 text-gray-500"
                   }`}
                 >
                   {num}
@@ -132,7 +137,7 @@ export function Onboarding() {
                 {num < 3 && (
                   <div
                     className={`w-24 h-1 mx-2 transition-all ${
-                      step > num ? "bg-gradient-to-r from-blue-500 to-cyan-500" : "bg-gray-800"
+                      step > num ? "bg-gradient-to-r from-blue-500 to-cyan-500" : "bg-gray-200 dark:bg-gray-800"
                     }`}
                   />
                 )}
@@ -147,10 +152,10 @@ export function Onboarding() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700"
+                className="bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-200 dark:border-gray-700"
               >
-                <h2 className="text-3xl font-bold text-white mb-2">¿Cuál es tu rol?</h2>
-                <p className="text-gray-400 mb-8">Selecciona el que mejor te describa</p>
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">¿Cuál es tu rol?</h2>
+                <p className="text-gray-600 dark:text-gray-400 mb-8">Selecciona el que mejor te describa</p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {roles.map((role) => {
@@ -162,15 +167,15 @@ export function Onboarding() {
                         className={`p-6 rounded-xl border-2 transition-all text-left ${
                           data.role === role.id
                             ? "border-blue-500 bg-blue-500/10"
-                            : "border-gray-700 bg-gray-900/50 hover:border-gray-600"
+                            : "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 hover:border-gray-300 dark:hover:border-gray-600"
                         }`}
                       >
                         <Icon
                           className={`w-8 h-8 mb-3 ${
-                            data.role === role.id ? "text-blue-400" : "text-gray-400"
+                            data.role === role.id ? "text-blue-400" : "text-gray-600 dark:text-gray-400"
                           }`}
                         />
-                        <h3 className="font-semibold text-white">{role.title}</h3>
+                        <h3 className="font-semibold text-gray-900 dark:text-white">{role.title}</h3>
                       </button>
                     );
                   })}
@@ -184,12 +189,12 @@ export function Onboarding() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700"
+                className="bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-200 dark:border-gray-700"
               >
-                <h2 className="text-3xl font-bold text-white mb-2">
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
                   ¿Cuál es tu objetivo concreto?
                 </h2>
-                <p className="text-gray-400 mb-8">Define en qué quieres mejorar</p>
+                <p className="text-gray-600 dark:text-gray-400 mb-8">Define en qué quieres mejorar</p>
 
                 <div className="space-y-3">
                   {data.role &&
@@ -200,12 +205,12 @@ export function Onboarding() {
                         className={`w-full p-4 rounded-xl border-2 transition-all text-left ${
                           data.goal === goal.id
                             ? "border-cyan-500 bg-cyan-500/10"
-                            : "border-gray-700 bg-gray-900/50 hover:border-gray-600"
+                            : "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 hover:border-gray-300 dark:hover:border-gray-600"
                         }`}
                       >
                         <h3
                           className={`font-semibold ${
-                            data.goal === goal.id ? "text-cyan-400" : "text-white"
+                            data.goal === goal.id ? "text-cyan-400" : "text-gray-900 dark:text-white"
                           }`}
                         >
                           {goal.title}
@@ -222,12 +227,12 @@ export function Onboarding() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700"
+                className="bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-200 dark:border-gray-700"
               >
-                <h2 className="text-3xl font-bold text-white mb-2">
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
                   ¿Cuál es tu nivel de experiencia?
                 </h2>
-                <p className="text-gray-400 mb-8">Esto nos ayudará a personalizar tu práctica</p>
+                <p className="text-gray-600 dark:text-gray-400 mb-8">Esto nos ayudará a personalizar tu práctica</p>
 
                 <div className="space-y-4">
                   {levels.map((level) => (
@@ -242,14 +247,14 @@ export function Onboarding() {
                     >
                       <h3
                         className={`font-semibold text-lg mb-1 ${
-                          data.level === level.id ? "text-emerald-400" : "text-white"
+                          data.level === level.id ? "text-emerald-400" : "text-gray-900 dark:text-white"
                         }`}
                       >
                         {level.title}
                       </h3>
                       <p
                         className={`text-sm ${
-                          data.level === level.id ? "text-emerald-200" : "text-gray-400"
+                          data.level === level.id ? "text-emerald-200" : "text-gray-600 dark:text-gray-400"
                         }`}
                       >
                         {level.description}
@@ -265,7 +270,7 @@ export function Onboarding() {
             {step > 1 && (
               <button
                 onClick={handleBack}
-                className="flex items-center gap-2 px-6 py-3 rounded-lg border border-gray-700 text-gray-300 hover:bg-gray-800 transition-colors"
+                className="flex items-center gap-2 px-6 py-3 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
                 Atrás
@@ -278,7 +283,7 @@ export function Onboarding() {
               className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${
                 canProceed()
                   ? "bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600"
-                  : "bg-gray-700 text-gray-500 cursor-not-allowed"
+                  : "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed"
               }`}
             >
               {step === 3 ? "Completar" : "Siguiente"}

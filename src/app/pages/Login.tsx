@@ -1,4 +1,5 @@
 import { supabase } from "../../lib/supabase";
+import { ThemeToggle } from "../components/ThemeToggle";
 
 export function Login() {
   const handleGoogleLogin = async () => {
@@ -9,11 +10,14 @@ export function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900
-                    flex items-center justify-center text-white">
-      <div className="text-center space-y-6 p-8 bg-gray-800/50 rounded-2xl border border-gray-700">
-        <img src="/logo-seo.png" alt="SEO" className="h-16 w-auto mx-auto" />
-        <p className="text-gray-400">Inicia sesión para guardar tu progreso</p>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900
+                    flex items-center justify-center text-gray-900 dark:text-white relative">
+      <div className="absolute top-6 right-6">
+        <ThemeToggle />
+      </div>
+      <div className="text-center space-y-6 p-8 bg-white/70 dark:bg-gray-800/50 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
+        <img src="/logo-seo.png" alt="SEO" className="h-16 w-auto mx-auto invert dark:invert-0" />
+        <p className="text-gray-600 dark:text-gray-400">Inicia sesión para guardar tu progreso</p>
         <button
           onClick={handleGoogleLogin}
           className="bg-white text-gray-900 px-6 py-3 rounded-xl font-semibold

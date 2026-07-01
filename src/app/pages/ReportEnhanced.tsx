@@ -18,6 +18,7 @@ import {
   Calendar,
 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from "recharts";
+import { ThemeToggle } from "../components/ThemeToggle";
 
 interface LocationState {
   stats: {
@@ -44,9 +45,9 @@ export function Report() {
 
   if (!state) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-400 mb-4">No hay datos de práctica disponibles</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">No hay datos de práctica disponibles</p>
           <Link to="/" className="text-blue-400 underline hover:text-blue-300">
             Volver al inicio
           </Link>
@@ -148,15 +149,15 @@ export function Report() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]" />
 
-      <header className="relative border-b border-gray-800 bg-gray-900/50 backdrop-blur-sm">
+      <header className="relative border-b border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link to="/" className="text-2xl font-bold">
-            <img src="/logo-seo.png" alt="SEO" className="h-8 w-auto" />
+            <img src="/logo-seo.png" alt="SEO" className="h-8 w-auto invert dark:invert-0" />
           </Link>
-          <div className="flex gap-3">
+          <div className="flex items-center gap-3">
             <Link
               to="/select-context"
               className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all"
@@ -166,11 +167,12 @@ export function Report() {
             </Link>
             <Link
               to="/dashboard"
-              className="flex items-center gap-2 px-4 py-2 border border-gray-700 bg-gray-800/50 text-gray-200 rounded-lg hover:bg-gray-700 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/50 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
             >
               <Home className="w-4 h-4" />
               Dashboard
             </Link>
+            <ThemeToggle />
           </div>
         </div>
       </header>
@@ -179,14 +181,14 @@ export function Report() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-8 mb-8"
+          className="bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-xl p-8 mb-8"
         >
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-3 mb-4">
               <Trophy className="w-12 h-12 text-yellow-400" />
-              <h1 className="text-4xl font-bold text-white">Reporte Completo</h1>
+              <h1 className="text-4xl font-bold text-gray-900 dark:text-white">Reporte Completo</h1>
             </div>
-            <p className="text-gray-400 text-lg">{contextType}</p>
+            <p className="text-gray-600 dark:text-gray-400 text-lg">{contextType}</p>
             <div className="flex items-center justify-center gap-6 mt-4 text-sm text-gray-500">
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
@@ -198,7 +200,7 @@ export function Report() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
             <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-xl p-8 text-center">
-              <p className="text-sm uppercase tracking-wide text-gray-400 mb-2">Puntuación General</p>
+              <p className="text-sm uppercase tracking-wide text-gray-600 dark:text-gray-400 mb-2">Puntuación General</p>
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
@@ -207,7 +209,7 @@ export function Report() {
               >
                 {overallScore}
               </motion.div>
-              <p className="text-xl text-white mb-4">{getScoreMessage(overallScore)}</p>
+              <p className="text-xl text-gray-900 dark:text-white mb-4">{getScoreMessage(overallScore)}</p>
               <div className="flex items-center justify-center gap-2 text-sm">
                 {overallScore > previousScore ? (
                   <>
@@ -217,13 +219,13 @@ export function Report() {
                     </span>
                   </>
                 ) : (
-                  <span className="text-gray-400">Primera sesión registrada</span>
+                  <span className="text-gray-600 dark:text-gray-400">Primera sesión registrada</span>
                 )}
               </div>
             </div>
 
-            <div className="bg-gray-900/50 border border-gray-700 rounded-xl p-6">
-              <h3 className="font-semibold text-white mb-4">Comparación con Sesión Anterior</h3>
+            <div className="bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Comparación con Sesión Anterior</h3>
               <ResponsiveContainer width="100%" height={200}>
                 <BarChart data={comparisonData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
@@ -249,8 +251,8 @@ export function Report() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            <div className="bg-gray-900/50 border border-gray-700 rounded-xl p-6">
-              <h3 className="font-semibold text-white mb-4 flex items-center gap-2">
+            <div className="bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                 <Zap className="w-5 h-5 text-cyan-400" />
                 Análisis Multidimensional
               </h3>
@@ -290,16 +292,16 @@ export function Report() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.3 + index * 0.1 }}
-                    className="bg-gray-900/50 border border-gray-700 rounded-xl p-4"
+                    className="bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl p-4"
                   >
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-3">
-                        <Icon className="w-5 h-5 text-gray-400" />
-                        <span className="font-medium text-white">{metric.label}</span>
+                        <Icon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                        <span className="font-medium text-gray-900 dark:text-white">{metric.label}</span>
                       </div>
-                      <span className="text-2xl font-bold text-white">{metric.value}%</span>
+                      <span className="text-2xl font-bold text-gray-900 dark:text-white">{metric.value}%</span>
                     </div>
-                    <div className="w-full bg-gray-800 rounded-full h-3">
+                    <div className="w-full bg-gray-200 dark:bg-gray-800 rounded-full h-3">
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${metric.value}%` }}
@@ -335,9 +337,9 @@ export function Report() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6"
+            className="bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-xl p-6"
           >
-            <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
               <CheckCircle className="w-6 h-6 text-emerald-400" />
               Top 3 Fortalezas
             </h3>
@@ -372,9 +374,9 @@ export function Report() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6"
+            className="bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-xl p-6"
           >
-            <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
               <TrendingUp className="w-6 h-6 text-yellow-400" />
               Top 3 Áreas de Mejora
             </h3>
@@ -413,13 +415,13 @@ export function Report() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6 mb-8"
+          className="bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-xl p-6 mb-8"
         >
-          <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
             <Play className="w-6 h-6 text-red-400" />
             Fragmentos de Video Marcados
           </h3>
-          <p className="text-gray-400 text-sm mb-6">
+          <p className="text-gray-600 dark:text-gray-400 text-sm mb-6">
             Momentos clave donde detectamos oportunidades de mejora
           </p>
 
@@ -448,8 +450,8 @@ export function Report() {
                         : "text-blue-400"
                     }`}
                   />
-                  <div className="font-mono font-bold text-white">{fragment.timestamp}</div>
-                  <div className="text-gray-300 text-sm">{fragment.issue}</div>
+                  <div className="font-mono font-bold text-gray-900 dark:text-white">{fragment.timestamp}</div>
+                  <div className="text-gray-700 dark:text-gray-300 text-sm">{fragment.issue}</div>
                 </div>
                 <div
                   className={`px-3 py-1 rounded-full text-xs font-semibold ${
@@ -477,16 +479,16 @@ export function Report() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.75 }}
-            className="bg-gray-800/50 backdrop-blur-sm border border-blue-500/30 rounded-xl p-6 mb-8"
+            className="bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm border border-blue-500/30 rounded-xl p-6 mb-8"
           >
-            <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
               <span className="text-2xl">🤖</span>
               <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
                 Análisis de tu Coach IA
               </span>
             </h3>
-            <div className="bg-gray-900/50 border border-gray-700 rounded-xl p-6">
-              <p className="text-gray-200 text-sm leading-relaxed whitespace-pre-wrap">
+            <div className="bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
+              <p className="text-gray-800 dark:text-gray-200 text-sm leading-relaxed whitespace-pre-wrap">
                 {report}
               </p>
             </div>
@@ -499,26 +501,26 @@ export function Report() {
           transition={{ delay: 0.8 }}
           className="bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-xl p-8"
         >
-          <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
             <Target className="w-6 h-6 text-cyan-400" />
             Siguiente Sesión Recomendada
           </h3>
-          <p className="text-gray-300 mb-6">
+          <p className="text-gray-700 dark:text-gray-300 mb-6">
             Basado en tu desempeño, te recomendamos enfocarte en:
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-4">
+            <div className="bg-white/70 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
               <h4 className="font-semibold text-cyan-400 mb-2">Objetivo Principal</h4>
-              <p className="text-gray-300 text-sm">Reducción de muletillas a menos de 3</p>
+              <p className="text-gray-700 dark:text-gray-300 text-sm">Reducción de muletillas a menos de 3</p>
             </div>
-            <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-4">
+            <div className="bg-white/70 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
               <h4 className="font-semibold text-cyan-400 mb-2">Objetivo Secundario</h4>
-              <p className="text-gray-300 text-sm">Mejorar contacto visual a 85%+</p>
+              <p className="text-gray-700 dark:text-gray-300 text-sm">Mejorar contacto visual a 85%+</p>
             </div>
-            <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-4">
+            <div className="bg-white/70 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
               <h4 className="font-semibold text-cyan-400 mb-2">Duración Sugerida</h4>
-              <p className="text-gray-300 text-sm">10-12 minutos</p>
+              <p className="text-gray-700 dark:text-gray-300 text-sm">10-12 minutos</p>
             </div>
           </div>
 

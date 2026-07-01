@@ -18,6 +18,7 @@ import {
   Zap,
 } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { ThemeToggle } from "../components/ThemeToggle";
 
 export function Dashboard() {
   const profile = JSON.parse(localStorage.getItem("voxmentor_profile") || "{}");
@@ -140,16 +141,16 @@ export function Dashboard() {
   // ─────────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]" />
 
-      <nav className="relative border-b border-gray-800 bg-gray-900/50 backdrop-blur-sm">
+      <nav className="relative border-b border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link to="/" className="text-2xl font-bold">
-            <img src="/logo-seo.png" alt="SEO" className="h-8 w-auto" />
+            <img src="/logo-seo.png" alt="SEO" className="h-8 w-auto invert dark:invert-0" />
           </Link>
 
-          <div className="flex gap-4">
+          <div className="flex items-center gap-4">
             <Link
               to="/exercises"
               className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all"
@@ -159,11 +160,12 @@ export function Dashboard() {
             </Link>
             <Link
               to="/resources"
-              className="flex items-center gap-2 px-4 py-2 bg-gray-800 text-gray-200 rounded-lg hover:bg-gray-700 transition-colors border border-gray-700"
+              className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors border border-gray-200 dark:border-gray-700"
             >
               <BookOpen className="w-4 h-4" />
               Recursos
             </Link>
+            <ThemeToggle />
           </div>
         </div>
       </nav>
@@ -178,20 +180,20 @@ export function Dashboard() {
             <div className="flex items-center gap-3 mb-4">
               <Target className="w-8 h-8 text-blue-400" />
               <div>
-                <h2 className="text-xl font-bold text-white">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                   Perfil: {profile.role} • Objetivo: {profile.goal}
                 </h2>
-                <p className="text-gray-400 text-sm">Experiencia: {profile.level}</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">Experiencia: {profile.level}</p>
               </div>
             </div>
 
-            <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+            <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                   <Zap className="w-5 h-5 text-yellow-400" />
-                  <span className="font-semibold text-white">Nivel {currentLevel}</span>
+                  <span className="font-semibold text-gray-900 dark:text-white">Nivel {currentLevel}</span>
                 </div>
-                <div className="flex items-center gap-1 text-sm text-gray-400">
+                <div className="flex items-center gap-1 text-sm text-gray-600 dark:text-gray-400">
                   <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
                   <span className="text-yellow-400 font-semibold">{totalStars}</span>
                   <span>estrellas ganadas</span>
@@ -208,7 +210,7 @@ export function Dashboard() {
                   {starsInCurrentLevel} / {starsPerLevel}
                 </div>
               </div>
-              <p className="text-xs text-gray-400 mt-2 text-center">
+              <p className="text-xs text-gray-600 dark:text-gray-400 mt-2 text-center">
                 {starsPerLevel - starsInCurrentLevel} estrellas para Nivel {currentLevel + 1}
               </p>
             </div>
@@ -224,13 +226,13 @@ export function Dashboard() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6"
+                className="bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-xl p-6"
               >
                 <div className="flex items-center justify-between mb-2">
                   <Icon className={`w-6 h-6 ${stat.color}`} />
                 </div>
-                <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
-                <div className="text-sm text-gray-400">{stat.label}</div>
+                <div className="text-3xl font-bold text-gray-900 dark:text-white mb-1">{stat.value}</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">{stat.label}</div>
               </motion.div>
             );
           })}
@@ -241,10 +243,10 @@ export function Dashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="lg:col-span-2 bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6"
+            className="lg:col-span-2 bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-xl p-6"
           >
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold text-white flex items-center gap-2">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                 <TrendingUp className="w-5 h-5 text-blue-400" />
                 Progreso de Puntaje
               </h3>
@@ -252,7 +254,7 @@ export function Dashboard() {
                 <button className="px-3 py-1 bg-blue-500/20 text-blue-400 rounded-lg text-sm">
                   Semanal
                 </button>
-                <button className="px-3 py-1 text-gray-400 rounded-lg text-sm hover:bg-gray-700">
+                <button className="px-3 py-1 text-gray-600 dark:text-gray-400 rounded-lg text-sm hover:bg-gray-100 dark:hover:bg-gray-700">
                   Mensual
                 </button>
               </div>
@@ -304,15 +306,15 @@ export function Dashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6"
+            className="bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-xl p-6"
           >
-            <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
               <Calendar className="w-5 h-5 text-cyan-400" />
               Próxima Sesión
             </h3>
             <div className="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/20 rounded-lg p-4 mb-4">
               <p className="text-cyan-400 font-semibold mb-1">Recomendada para ti</p>
-              <p className="text-white text-sm mb-3">Enfoque: Reducción de muletillas</p>
+              <p className="text-gray-900 dark:text-white text-sm mb-3">Enfoque: Reducción de muletillas</p>
               <Link
                 to="/practice/filler-words-focus?focus=muletillas"
                 className="w-full block text-center bg-gradient-to-r from-cyan-500 to-blue-500 text-white py-2 rounded-lg hover:from-cyan-600 hover:to-blue-600 transition-all text-sm font-medium"
@@ -324,15 +326,15 @@ export function Dashboard() {
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-sm">
                 <div className="w-2 h-2 bg-blue-400 rounded-full" />
-                <span className="text-gray-300">Duración estimada: 10-15 min</span>
+                <span className="text-gray-700 dark:text-gray-300">Duración estimada: 10-15 min</span>
               </div>
               <div className="flex items-center gap-3 text-sm">
                 <div className="w-2 h-2 bg-cyan-400 rounded-full" />
-                <span className="text-gray-300">Métricas a evaluar: 5</span>
+                <span className="text-gray-700 dark:text-gray-300">Métricas a evaluar: 5</span>
               </div>
               <div className="flex items-center gap-3 text-sm">
                 <div className="w-2 h-2 bg-emerald-400 rounded-full" />
-                <span className="text-gray-300">Dificultad: Intermedia</span>
+                <span className="text-gray-700 dark:text-gray-300">Dificultad: Intermedia</span>
               </div>
             </div>
           </motion.div>
@@ -342,9 +344,9 @@ export function Dashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6"
+          className="bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-xl p-6"
         >
-          <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
             <Trophy className="w-5 h-5 text-yellow-400" />
             Logros
           </h3>
@@ -360,29 +362,29 @@ export function Dashboard() {
                   transition={{ delay: 0.5 + index * 0.05 }}
                   className={`relative p-4 rounded-xl border-2 ${
                     achievement.unlocked
-                      ? "border-gray-700 bg-gray-900/50"
-                      : "border-gray-800 bg-gray-900/30 opacity-60"
+                      ? "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50"
+                      : "border-gray-200 dark:border-gray-800 bg-gray-100/60 dark:bg-gray-900/30 opacity-60"
                   }`}
                 >
                   <div
                     className={`w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-3 ${
                       achievement.unlocked
                         ? `bg-gradient-to-br ${achievement.color}`
-                        : "bg-gray-800"
+                        : "bg-gray-300 dark:bg-gray-800"
                     }`}
                   >
                     <Icon className="w-6 h-6 text-white" />
                   </div>
                   <h4
                     className={`text-sm font-semibold text-center mb-1 ${
-                      achievement.unlocked ? "text-white" : "text-gray-600"
+                      achievement.unlocked ? "text-gray-900 dark:text-white" : "text-gray-600"
                     }`}
                   >
                     {achievement.title}
                   </h4>
                   <p
                     className={`text-xs text-center ${
-                      achievement.unlocked ? "text-gray-400" : "text-gray-700"
+                      achievement.unlocked ? "text-gray-600 dark:text-gray-400" : "text-gray-700"
                     }`}
                   >
                     {achievement.description}

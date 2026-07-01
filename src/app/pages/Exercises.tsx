@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { motion } from "motion/react";
 import { Star, ArrowLeft, Target, Clock, Trophy } from "lucide-react";
+import { ThemeToggle } from "../components/ThemeToggle";
 
 
 interface Exercise {
@@ -227,21 +228,24 @@ export function Exercises() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]" />
 
-      <header className="relative border-b border-gray-800 bg-gray-900/50 backdrop-blur-sm">
+      <header className="relative border-b border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <Link to="/" className="text-2xl font-bold">
-            <img src="/logo-seo.png" alt="SEO" className="h-8 w-auto" />
+            <img src="/logo-seo.png" alt="SEO" className="h-8 w-auto invert dark:invert-0" />
           </Link>
-          <Link
-            to="/dashboard"
-            className="flex items-center gap-2 px-4 py-2 text-gray-400 hover:text-gray-200 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Volver al Dashboard
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              to="/dashboard"
+              className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Volver al Dashboard
+            </Link>
+            <ThemeToggle />
+          </div>
         </div>
       </header>
 
@@ -251,11 +255,11 @@ export function Exercises() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-4xl font-bold text-white mb-2 flex items-center gap-3">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-3">
             <Target className="w-10 h-10 text-cyan-400" />
             Ejercicios de Práctica
           </h1>
-          <p className="text-gray-400 text-lg">
+          <p className="text-gray-600 dark:text-gray-400 text-lg">
             Ejercicios diseñados para tu perfil: {profile.role || "Estudiante"}
           </p>
         </motion.div>
@@ -267,7 +271,7 @@ export function Exercises() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-6 hover:border-gray-600 transition-all"
+              className="bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:border-gray-300 dark:hover:border-gray-600 transition-all"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className={`px-3 py-1 rounded-lg bg-gradient-to-r ${getDifficultyColor(exercise.difficulty)} text-white text-xs font-semibold`}>
@@ -287,25 +291,25 @@ export function Exercises() {
                 </div>
               </div>
 
-              <h3 className="text-xl font-bold text-white mb-2">{exercise.title}</h3>
-              <p className="text-gray-400 text-sm mb-4 leading-relaxed">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{exercise.title}</h3>
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 leading-relaxed">
                 {exercise.description}
               </p>
 
               <div className="space-y-2 mb-4">
-                <div className="flex items-center gap-2 text-sm text-gray-300">
+                <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                   <Target className="w-4 h-4 text-cyan-400" />
-                  <span className="text-gray-400">Enfoque:</span>
+                  <span className="text-gray-600 dark:text-gray-400">Enfoque:</span>
                   <span className="text-cyan-400 font-medium">{exercise.focus}</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-300">
+                <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                   <Clock className="w-4 h-4 text-blue-400" />
-                  <span className="text-gray-400">Duración:</span>
+                  <span className="text-gray-600 dark:text-gray-400">Duración:</span>
                   <span className="text-blue-400 font-medium">{exercise.duration}</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-300">
+                <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                   <Trophy className="w-4 h-4 text-yellow-400" />
-                  <span className="text-gray-400">Recompensa:</span>
+                  <span className="text-gray-600 dark:text-gray-400">Recompensa:</span>
                   <span className="text-yellow-400 font-medium">{exercise.stars} estrellas</span>
                 </div>
               </div>

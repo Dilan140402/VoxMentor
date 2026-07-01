@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { motion } from "motion/react";
 import { GraduationCap, Briefcase, ShoppingCart, Users, Presentation, Lightbulb, ArrowLeft } from "lucide-react";
+import { ThemeToggle } from "../components/ThemeToggle";
 
 const contexts = [
   {
@@ -49,20 +50,23 @@ const contexts = [
 
 export function ContextSelection() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-slate-900 dark:to-gray-900">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)]" />
 
-      <header className="relative p-6 flex items-center justify-between border-b border-gray-800">
+      <header className="relative p-6 flex items-center justify-between border-b border-gray-200 dark:border-gray-800">
         <Link to="/" className="text-2xl font-bold">
-          <img src="/logo-seo.png" alt="SEO" className="h-8 w-auto" />
+          <img src="/logo-seo.png" alt="SEO" className="h-8 w-auto invert dark:invert-0" />
         </Link>
-        <Link
-          to="/dashboard"
-          className="flex items-center gap-2 px-4 py-2 text-gray-400 hover:text-gray-200 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Dashboard
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            to="/dashboard"
+            className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Dashboard
+          </Link>
+          <ThemeToggle />
+        </div>
       </header>
 
       <main className="relative max-w-6xl mx-auto px-4 py-12">
@@ -71,10 +75,10 @@ export function ContextSelection() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl font-bold text-white mb-4">
+          <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
             Selecciona tu Contexto de Práctica
           </h2>
-          <p className="text-lg text-gray-400">
+          <p className="text-lg text-gray-600 dark:text-gray-400">
             Cada contexto está diseñado con parámetros específicos de evaluación
           </p>
         </motion.div>
@@ -91,15 +95,15 @@ export function ContextSelection() {
               >
                 <Link
                   to={`/practice/${context.id}`}
-                  className="block bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl hover:border-gray-600 transition-all p-6 group h-full"
+                  className="block bg-white/70 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-xl hover:border-gray-300 dark:hover:border-gray-600 transition-all p-6 group h-full"
                 >
                   <div className={`w-16 h-16 bg-gradient-to-br ${context.gradient} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                     <Icon className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="font-bold text-white text-lg mb-2 group-hover:text-blue-400 transition-colors">
+                  <h3 className="font-bold text-gray-900 dark:text-white text-lg mb-2 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors">
                     {context.title}
                   </h3>
-                  <p className="text-gray-400 text-sm leading-relaxed">
+                  <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
                     {context.description}
                   </p>
                 </Link>
